@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: Book API
+  version: 1.0.0
+
+servers:
+  - url: /api/v1
+
+paths:
+  /books/{id}:
+    get:
+      tags:
+        - Book
+      operationId: getBookById
+      summary: Get a book by Id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/responses/BookResponse'
+        404:
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      summary: Update a book
+      operationId: updateBook
+      tags:
+        - Book
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        $ref: '#/components/requestBodies/BookUpsertRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/BookResponse'
+        404:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Delete a book
+      operationId: deleteBook
+      tags:
+        - Book
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          $ref: '#/components/responses/BookResponse'
+        404:
+          $ref: '#/components/responses/ErrorResponse'
+
+  /books:
+    get:
+      tags:
+        - Book
+      operationId: listBooks
+      summary: List of all books
+      responses:
+        200:
+          $ref: '#/components/responses/BooksResponse'
+        404:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      summary: Create a new book
+      operationId: createBook
+      tags:
+        - Book
+      requestBody:
+        $ref: '#/components/requestBodies/BookUpsertRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/BookResponse'
+        404:
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+  # the actual response made up by single or complex schema references are used in responses
+  requestBodies:
+    BookUpsertRequest:
+      description: Request body for creating or updating a book
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookDTO'
+  responses:
+    BookResponse:
+      description: Successful response for a single book
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookDTO'
+    BooksResponse:
+      description: Successful response for list of books
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BookDTO'
+    ErrorResponse:
+      description: Generic error response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+  # data structures referenced in this section
+  schemas:
+    ListOfBooksDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/BookDTO'
+    BookDTO:
+      $ref: './schemas/dtos.yaml#/components/schemas/BookDTO'
+    ErrorDTO:
+      $ref: './schemas/dtos.yaml#/components/schemas/ErrorDTO'
+

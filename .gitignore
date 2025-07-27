@@ -1,0 +1,12 @@
+# intellij related sub projects
+**/.idea/
+**/*.iml
+
+
+# subfolders target
+**/target/
+
+# subfolders maven related
+**/mvnw
+**/mvnw.cmd
+**/.mvn/
